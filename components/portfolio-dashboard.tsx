@@ -4,13 +4,13 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   Activity, AlertTriangle, ArrowDownRight, ArrowUpRight, BarChart3, Check,
   ChevronRight, CircleDollarSign, Clock3, History, LayoutDashboard,
-  Menu, Plus, RotateCcw, Settings2, Target, Trash2, TrendingUp, WalletCards, X,
+  Menu, Plus, Settings2, Target, Trash2, TrendingUp, WalletCards, X,
 } from "lucide-react";
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import {
-  calculateBuyFee, calculateSellFee, createDemoState, emptyState, enrichTrade, formatDate,
+  calculateBuyFee, calculateSellFee, emptyState, enrichTrade, formatDate,
   formatIDR, formatPct, getEquityData, getMetrics, id, PortfolioState,
   STORAGE_KEY, Trade,
 } from "@/lib/portfolio";
@@ -264,11 +264,6 @@ export function PortfolioDashboard() {
             <>
               <section className="welcome-row">
                 <div><h2>Selamat datang kembali.</h2><p>Ringkasan performa portfolio per {formatDate(new Date().toISOString())}.</p></div>
-                {state.trades.length === 0 && (
-                  <button className="text-button" onClick={() => setState(createDemoState(state.settings))}>
-                    <RotateCcw size={15} /> Gunakan data demo
-                  </button>
-                )}
               </section>
 
               <section className="metrics-grid">
