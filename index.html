@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuantPilot Portfolio Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">QP</div>
+        <div>
+          <strong>QuantPilot</strong>
+          <span>Portfolio Tracker</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#signals">Signals</a>
+        <a href="#positions">Active</a>
+        <a href="#history">History</a>
+        <a href="#analytics">Analytics</a>
+      </nav>
+      <div class="capital-box">
+        <span>Starting Cash</span>
+        <strong id="startingCash">Rp20.000.000</strong>
+        <small>Default allocation Rp1.000.000/call</small>
+      </div>
+    </aside>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Realtime Trading Journal</p>
+          <h1>Bot performance, tracked from signal to exit.</h1>
+        </div>
+        <div class="top-actions">
+          <button id="seedButton" class="ghost-button" type="button">Load Sample</button>
+          <button id="resetButton" class="danger-button" type="button">Reset Data</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="metric-grid"></section>
+
+      <section class="workspace-grid">
+        <article id="signals" class="panel signal-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Telegram Call</p>
+              <h2>Catat Entry & Target</h2>
+            </div>
+            <span id="parseStatus" class="status-chip muted">Ready</span>
+          </div>
+          <div class="form-grid">
+            <label>
+              Ticker
+              <input id="tickerInput" type="text" placeholder="KOKA" />
+            </label>
+            <label>
+              Entry Price
+              <input id="entryPriceInput" type="number" min="0" step="1" placeholder="196" />
+            </label>
+            <label>
+              TP1
+              <input id="tp1Input" type="number" min="0" step="1" placeholder="219" />
+            </label>
+            <label>
+              TP2
+              <input id="tp2Input" type="number" min="0" step="1" placeholder="226" />
+            </label>
+            <label>
+              Stop Loss
+              <input id="stopLossInput" type="number" min="0" step="1" placeholder="186" />
+            </label>
+            <label>
+              Call Time
+              <input id="callTimeInput" type="datetime-local" />
+            </label>
+            <label>
+              Allocation
+              <input id="allocationInput" type="number" min="0" step="10000" value="1000000" />
+            </label>
+            <label>
+              Signal Source
+              <input id="sourceInput" type="text" value="Telegram" />
+            </label>
+          </div>
+          <label>
+            Telegram Note
+            <textarea id="rawSignal" spellcheck="false" placeholder="Opsional: paste isi call Telegram untuk catatan audit."></textarea>
+          </label>
+          <div class="button-row">
+            <button id="saveSignalButton" type="button">Save Call</button>
+          </div>
+          <div id="parsedPreview" class="parsed-preview"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Portfolio Curve</p>
+              <h2>Equity Path</h2>
+            </div>
+          </div>
+          <div id="equityChart" class="chart"></div>
+        </article>
+      </section>
+
+      <section id="positions" class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Live Risk</p>
+            <h2>Active Positions</h2>
+          </div>
+        </div>
+        <div id="positionsTable" class="table-wrap"></div>
+      </section>
+
+      <section class="workspace-grid">
+        <article id="history" class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Trade Journal</p>
+              <h2>Signals & Executions</h2>
+            </div>
+          </div>
+          <div id="signalsTable" class="table-wrap"></div>
+        </article>
+
+        <article id="analytics" class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Outcome Quality</p>
+              <h2>Win/Loss & MFE</h2>
+            </div>
+          </div>
+          <div id="analyticsView"></div>
+        </article>
+      </section>
+    </main>
+
+    <dialog id="tradeDialog">
+      <form method="dialog" id="tradeForm" class="dialog-card">
+        <input id="tradeIdInput" type="hidden" />
+        <h2 id="dialogTitle">Record Trade</h2>
+        <div class="form-grid">
+          <label>
+            Buy Price
+            <input id="buyPriceInput" type="number" min="0" step="1" required />
+          </label>
+          <label>
+            Quantity
+            <input id="quantityInput" type="number" min="0" step="1" required />
+          </label>
+          <label>
+            Current Price
+            <input id="currentPriceInput" type="number" min="0" step="1" />
+          </label>
+          <label>
+            Buy Fee
+            <input id="buyFeeInput" type="number" min="0" step="1" value="0" />
+          </label>
+          <label>
+            Sell Price
+            <input id="sellPriceInput" type="number" min="0" step="1" />
+          </label>
+          <label>
+            Sell Fee
+            <input id="sellFeeInput" type="number" min="0" step="1" value="0" />
+          </label>
+          <label>
+            Exit Reason
+            <select id="exitReasonInput">
+              <option value="">Still Open</option>
+              <option value="tp1">TP1</option>
+              <option value="tp2">TP2</option>
+              <option value="stop_loss">Stop Loss</option>
+              <option value="manual">Manual</option>
+              <option value="time_exit">Time Exit</option>
+            </select>
+          </label>
+        </div>
+        <div class="button-row end">
+          <button value="cancel" class="ghost-button" type="button" id="cancelDialogButton">Cancel</button>
+          <button value="default" type="submit">Save Trade</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
